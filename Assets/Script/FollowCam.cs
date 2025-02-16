@@ -33,7 +33,7 @@ public class FollowCam : MonoBehaviour
         if (POI != null) {
             destination = POI.transform.position;
         }
-        
+
         // Limit the minimum values of destination.x & destination.y
         destination.x = Mathf.Max(minXY.x, destination.x);
         destination.y = Mathf.Max(minXY.y, destination.y);
@@ -43,5 +43,7 @@ public class FollowCam : MonoBehaviour
         destination.z = camZ;
         // Set the camera to the destination
         transform.position = destination;
+        // Set the orthographicSize of the Camera to keep Ground in view
+        Camera.main.orthographicSize = destination.y + 10;
     }
 }

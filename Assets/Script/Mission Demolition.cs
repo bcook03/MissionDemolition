@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,8 +14,8 @@ public class MissionDemolition : MonoBehaviour
 {   
     static private MissionDemolition S; // a private Singleton
     [Header("Inscribed")]
-    public TextMeshPro uitLevel;
-    public TextMeshPro uitShots;
+    public TextMeshProUGUI uitLevel;
+    public TextMeshProUGUI uitShots;
     public Vector3 castlePos;
     public GameObject[] castles;
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public enum GameMode {
     idle,
@@ -57,6 +58,9 @@ public class MissionDemolition : MonoBehaviour
 
         mode = GameMode.playing;
 
+        // Zoom out to show both
+        FollowCam.SWITCH_VIEW(FollowCam.eView.both);
+
     }
 
     void UpdateGUI() {
@@ -74,7 +78,8 @@ public class MissionDemolition : MonoBehaviour
         if ( ( mode == GameMode.playing) && Goal.goalMet ) {
             // Change mode to stop checking for level end
             mode = GameMode.levelEnd;
-
+            //Zoom out to show both
+            FollowCam.SWITCH_VIEW(FollowCam.eView.both);
             // Start the next level in 2 seconds
             Invoke("NextLevel", 2f);
         }
@@ -85,6 +90,7 @@ public class MissionDemolition : MonoBehaviour
         if (level == levelMax) {
             level = 0;
             shotsTaken = 0;
+            SceneManager.LoadScene(1);
         }
         StartLevel();
     }

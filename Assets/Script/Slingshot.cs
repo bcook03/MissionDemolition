@@ -8,6 +8,9 @@ public class Slingshot : MonoBehaviour
     public GameObject projectilePrefab;
     public float velocityMult = 9.25f;
     public GameObject projLinePrefab;
+    public GameObject rubberBandPrefab;
+    public Transform launchPointTransform;
+    public AudioSource bandAudio;
 
     [Header("Dynamic")]
     public GameObject launchPoint;
@@ -17,10 +20,12 @@ public class Slingshot : MonoBehaviour
 
     void Awake()
     {
+        bandAudio = GetComponent<AudioSource>();
         Transform launchPointTrans = transform.Find("LaunchPoint");
         launchPoint = launchPointTrans.gameObject;
         launchPoint.SetActive( false );
         launchPos = launchPointTrans.position;
+        launchPointTransform = launchPointTrans;
     }
 
     void OnMouseEnter(){
@@ -41,6 +46,8 @@ public class Slingshot : MonoBehaviour
         projectile.transform.position = launchPos;
         // Set it to isKinematic for now
         projectile.GetComponent<Rigidbody>().isKinematic = true;
+        Instantiate(rubberBandPrefab, projectile.transform);
+
 
     }
 
@@ -73,7 +80,7 @@ public class Slingshot : MonoBehaviour
             projRb.isKinematic = false;
             projRb.collisionDetectionMode = CollisionDetectionMode.Continuous;
             projRb.linearVelocity = -mouseDelta * velocityMult;
-
+            bandAudio.Play();
             // Switch to slingshot view immediately before setting POI
             FollowCam.SWITCH_VIEW(FollowCam.eView.slingshot);
 
@@ -84,10 +91,8 @@ public class Slingshot : MonoBehaviour
             MissionDemolition.SHOT_FIRED();
         }
 
-
-
-
     }
+
 } 
 
 

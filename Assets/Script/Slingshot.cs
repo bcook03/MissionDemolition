@@ -46,9 +46,13 @@ public class Slingshot : MonoBehaviour
         projectile.transform.position = launchPos;
         // Set it to isKinematic for now
         projectile.GetComponent<Rigidbody>().isKinematic = true;
-        Instantiate(rubberBandPrefab, projectile.transform);
 
+        GameObject rubberBand = Instantiate(rubberBandPrefab);
+        rubberBand.transform.position = launchPos;
+        rubberBand.transform.SetParent(projectile.transform);
 
+        RubberBandLine rubberBandLine = rubberBand.GetComponent<RubberBandLine>();
+        rubberBandLine.SetLaunchPosition(launchPos);
     }
 
     void Update()
@@ -85,6 +89,11 @@ public class Slingshot : MonoBehaviour
             FollowCam.SWITCH_VIEW(FollowCam.eView.slingshot);
 
             FollowCam.POI = projectile; // Set the _MainCamera POI
+
+            RubberBandLine rubberBandLine = projectile.GetComponentInChildren<RubberBandLine>();
+            if (rubberBandLine != null) {
+                rubberBandLine.StopDrawing();
+            }
 
             Instantiate<GameObject>(projLinePrefab, projectile.transform);
             projectile = null;

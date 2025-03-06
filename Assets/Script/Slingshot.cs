@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class Slingshot : MonoBehaviour
 {
+    [SerializeField] private LineRenderer rubber;
+    [SerializeField] private Transform firstPosition;
+    [SerializeField] private Transform secondPosition;
+
     [Header("Inscribed")]
     public GameObject projectilePrefab;
     public float velocityMult = 9.25f;
     public GameObject projLinePrefab;
-    public GameObject rubberBandPrefab;
-    public Transform launchPointTransform;
+
     public AudioSource bandAudio;
 
     [Header("Dynamic")]
@@ -25,7 +28,9 @@ public class Slingshot : MonoBehaviour
         launchPoint = launchPointTrans.gameObject;
         launchPoint.SetActive( false );
         launchPos = launchPointTrans.position;
-        launchPointTransform = launchPointTrans;
+        rubber.SetPosition(0, firstPosition.position);
+        rubber.SetPosition(1, launchPos);
+        rubber.SetPosition(2, secondPosition.position);
     }
 
     void OnMouseEnter(){
@@ -47,12 +52,6 @@ public class Slingshot : MonoBehaviour
         // Set it to isKinematic for now
         projectile.GetComponent<Rigidbody>().isKinematic = true;
 
-        GameObject rubberBand = Instantiate(rubberBandPrefab);
-        rubberBand.transform.position = launchPos;
-        rubberBand.transform.SetParent(projectile.transform);
-
-        RubberBandLine rubberBandLine = rubberBand.GetComponent<RubberBandLine>();
-        rubberBandLine.SetLaunchPosition(launchPos);
     }
 
     void Update()
@@ -77,6 +76,7 @@ public class Slingshot : MonoBehaviour
         // Move the projectile to this position
         Vector3 projPos = launchPos + mouseDelta;
         projectile.transform.position = projPos;
+        rubber.SetPosition(1, projPos);
 
         if (Input.GetMouseButtonUp(0)) {
             aimingMode = false;
@@ -90,10 +90,7 @@ public class Slingshot : MonoBehaviour
 
             FollowCam.POI = projectile; // Set the _MainCamera POI
 
-            RubberBandLine rubberBandLine = projectile.GetComponentInChildren<RubberBandLine>();
-            if (rubberBandLine != null) {
-                rubberBandLine.StopDrawing();
-            }
+            rubber.SetPosition(1, launchPos);
 
             Instantiate<GameObject>(projLinePrefab, projectile.transform);
             projectile = null;
